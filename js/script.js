@@ -13,6 +13,15 @@ const reposSection = document.querySelector(".repos");
 // Individual repo data section
 const repoData = document.querySelector(".repo-data");
 
+// Return to repos button
+const goBackButton = document.querySelector(".view-repos");
+
+// Repo input filter
+const filterInput = document.querySelector(".filter-repos");
+
+
+
+
 // Fetch Github API
 const github = async function () {
     const githubInfo = await fetch(`https://api.github.com/users/${username}`);
@@ -53,6 +62,7 @@ const gitRepos = async function() {
 
 // Display info about repos
 const displayRepoInfo = function(repos) {
+    filterInput.classList.remove("hide");
     for (const repo of repos) {
         const li = document.createElement("li");
         li.classList.add("repo");
@@ -92,6 +102,7 @@ const displaySpecificInfo = function(repoInfo, languages) {
     repoData.innerHTML = "";
     repoData.classList.remove("hide");
     reposSection.classList.add("hide");
+    goBackButton.classList.remove("hide");
     const infoDiv = document.createElement("div");
     infoDiv.innerHTML = `<h3>Name: ${repoInfo.name}</h3>
     <p>Description: ${repoInfo.description}</p>
@@ -105,4 +116,26 @@ const displaySpecificInfo = function(repoInfo, languages) {
 };
 
 
+// Back to Repo Gallery button click event listener
+goBackButton.addEventListener("click", function() {
+    reposSection.classList.remove("hide");
+    goBackButton.classList.add("hide");
+
+});
+
+// Input Event Listener
+filterInput.addEventListener("input", function(e) {
+    const searchValue = e.target.value;
+    const repos = document.querySelectorAll(".repo");
+    const searchValueLower = searchValue.toLowerCase();
+    
+    for (const repo of repos) {
+        const lowercaseValue = repo.innerText.toLowerCase();
+        if (lowercaseValue.includes(searchValueLower)) {
+            repo.classList.remove("hide");
+        } else {
+            repo.classList.add("hide");
+        }
+    }
+});
 
